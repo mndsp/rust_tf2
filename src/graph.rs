@@ -1,7 +1,7 @@
-#[derive(Clone,Debug,Hash)] 
+#[derive(Clone, Debug, Hash)]
 pub struct TfGraphNode {
     pub child: String,
-    pub parent: String
+    pub parent: String,
 }
 
 impl PartialEq for TfGraphNode {
