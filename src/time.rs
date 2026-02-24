@@ -6,6 +6,7 @@ use std::fmt::Formatter;
 use std::hash::{Hash, Hasher};
 use std::ops;
 use std::time;
+use builtin_interfaces;
 
 const BILLION: i64 = 1_000_000_000;
 
@@ -348,5 +349,25 @@ impl From<Duration> for time::Duration {
         }
 
         Self::new((other.sec + extra_sec).try_into().unwrap(), nsec as u32)
+    }
+}
+
+impl From<builtin_interfaces::msg::Time> for Time {
+    fn from(msg: builtin_interfaces::msg::Time) -> Self {
+        // Self::from(msg.sec as i64 * 1_000_000_000 + msg.nanosec as i64)
+        Self {
+            sec: msg.sec as u32,
+            nsec: msg.nanosec,
+        }
+    }
+}
+
+impl From<Time> for builtin_interfaces::msg::Time {
+    fn from(msg: Time) -> Self {
+        // Self::from(msg.sec as i64 * 1_000_000_000 + msg.nanosec as i64)
+        Self {
+            sec: msg.sec as i32,
+            nanosec: msg.nsec,
+        }
     }
 }

@@ -24,6 +24,9 @@ mod time;
 mod transforms;
 mod utils;
 
+pub use crate::time::Time;
+pub use crate::time::Duration;
 pub use crate::buffer::TfBuffer;
+pub use crate::core::TfError;
 pub use crate::core::TransformInterface;
 pub use crate::core::TransformWithTimeInterface;
