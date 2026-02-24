@@ -1,8 +1,8 @@
 use crate::time::Time;
-use std::cmp::Ordering;
-use tf2_msgs;
 use geometry_msgs;
+use std::cmp::Ordering;
 use std_msgs;
+use tf2_msgs;
 
 /**
  * NewType pattern on geometry_msgs::TransformStamped
@@ -71,8 +71,27 @@ impl From<std_msgs::msg::Header> for Header {
     }
 }
 
+impl From<Header> for std_msgs::msg::Header {
+    fn from(msg: Header) -> Self {
+        Self {
+            frame_id: msg.frame_id,
+            stamp: builtin_interfaces::msg::Time::from(msg.stamp),
+        }
+    }
+}
+
 impl From<geometry_msgs::msg::Vector3> for Vector3 {
     fn from(msg: geometry_msgs::msg::Vector3) -> Self {
+        Self {
+            x: msg.x,
+            y: msg.y,
+            z: msg.z,
+        }
+    }
+}
+
+impl From<Vector3> for geometry_msgs::msg::Vector3 {
+    fn from(msg: Vector3) -> Self {
         Self {
             x: msg.x,
             y: msg.y,
@@ -92,11 +111,55 @@ impl From<geometry_msgs::msg::Quaternion> for Quaternion {
     }
 }
 
+impl From<Quaternion> for geometry_msgs::msg::Quaternion {
+    fn from(msg: Quaternion) -> Self {
+        Self {
+            x: msg.x,
+            y: msg.y,
+            z: msg.z,
+            w: msg.w,
+        }
+    }
+}
+
 impl From<geometry_msgs::msg::Transform> for Transform {
     fn from(msg: geometry_msgs::msg::Transform) -> Self {
         Self {
             translation: Vector3::from(msg.translation),
             rotation: Quaternion::from(msg.rotation),
+        }
+    }
+}
+
+impl From<Transform> for geometry_msgs::msg::Transform {
+    fn from(msg: Transform) -> Self {
+        Self {
+            translation: geometry_msgs::msg::Vector3::from(msg.translation),
+            rotation: geometry_msgs::msg::Quaternion::from(msg.rotation),
+        }
+    }
+}
+
+impl From<tf2_msgs::msg::TFMessage> for TFMessage {
+    fn from(msg: tf2_msgs::msg::TFMessage) -> Self {
+        Self {
+            transforms: msg
+                .transforms
+                .into_iter()
+                .map(TransformStamped::from)
+                .collect(),
+        }
+    }
+}
+
+impl From<TFMessage> for tf2_msgs::msg::TFMessage {
+    fn from(msg: TFMessage) -> Self {
+        Self {
+            transforms: msg
+                .transforms
+                .into_iter()
+                .map(geometry_msgs::msg::TransformStamped::from)
+                .collect(),
         }
     }
 }
@@ -111,13 +174,12 @@ impl From<geometry_msgs::msg::TransformStamped> for TransformStamped {
     }
 }
 
-impl From<tf2_msgs::msg::TFMessage> for TFMessage {
-    fn from(msg: tf2_msgs::msg::TFMessage) -> Self {
+impl From<TransformStamped> for geometry_msgs::msg::TransformStamped {
+    fn from(msg: TransformStamped) -> Self {
         Self {
-            transforms: msg.transforms
-                .into_iter()
-                .map(TransformStamped::from)
-                .collect(),
+            header: std_msgs::msg::Header::from(msg.header),
+            child_frame_id: msg.child_frame_id,
+            transform: geometry_msgs::msg::Transform::from(msg.transform),
         }
     }
 }

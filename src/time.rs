@@ -361,3 +361,13 @@ impl From<builtin_interfaces::msg::Time> for Time {
         }
     }
 }
+
+impl From<Time> for builtin_interfaces::msg::Time {
+    fn from(msg: Time) -> Self {
+        // Self::from(msg.sec as i64 * 1_000_000_000 + msg.nanosec as i64)
+        Self {
+            sec: msg.sec as i32,
+            nanosec: msg.nsec,
+        }
+    }
+}
