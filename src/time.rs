@@ -97,6 +97,20 @@ impl Time {
     pub fn seconds(self) -> f64 {
         f64::from(self.sec) + f64::from(self.nsec) / BILLION as f64
     }
+
+    /// Returns true if the time is zero.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use ros_message::Time;
+    /// assert!(Time { sec: 0, nsec: 0 }.is_zero());
+    /// assert!(!Time { sec: 12, nsec: 123 }.is_zero());
+    /// ```
+    #[inline]
+    pub fn is_zero(self) -> bool {
+        self.sec == 0 && self.nsec == 0
+    }
 }
 
 fn display_nanos(nanos: &str, f: &mut Formatter<'_>) -> fmt::Result {

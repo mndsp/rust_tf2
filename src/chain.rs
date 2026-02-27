@@ -35,7 +35,7 @@ impl TfIndividualTransformChain {
     }
 
     pub fn get_closest_transform(&self, time: Time) -> Result<msg::TransformStamped, TfError> {
-        if self.static_tf {
+        if self.static_tf || time.is_zero() {
             return Ok(self
                 .transform_chain
                 .get(self.transform_chain.len() - 1)
